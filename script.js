@@ -94,7 +94,7 @@ const displayMovements = function (movements, sort = false) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov}€</div>
+        <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
 
@@ -104,19 +104,19 @@ const displayMovements = function (movements, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance}€`;
+  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -126,7 +126,7 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
 const createUsernames = function (accs) {
@@ -206,7 +206,7 @@ btnTransfer.addEventListener('click', function (e) {
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
 
-  const amount = Number(inputLoanAmount.value);
+  const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
@@ -253,35 +253,119 @@ btnSort.addEventListener('click', function (e) {
 // LECTURES
 
 //Numbers
-//another parameter that it take is redix which is base of the number that we are dealing with like base 10 or 2 binary
-console.log(Number.parseInt('30px', 10));
-//here in this prefer the number first than something else
-//it gives NaN
-console.log(Number.parseInt('e30', 10));
-//float Number
-//the parse only take first number fo string
-console.log(Number.parseFloat('2.5rem', 10));
-//Infinity also exist in javascript
-//isNaN checks if the given string or number is NaN or not if not then it give false
-//literaly NaN
-console.log('-------');
-console.log(Number.isNaN('20')); //false
-console.log(Number.isNaN(20)); //false
-console.log(Number.isNaN(+'20')); //false
-console.log(Number.isNaN(+'20px')); //true
-console.log('-------');
-//best way of checking vlaue is a number is isFinite()
-console.log(Number.isFinite(20)); //true
-console.log(Number.isFinite('20')); //false
-console.log(Number.isFinite('20px')); //false
-console.log(Number.isFinite(+'20px')); //false
-console.log(Number.isFinite(+'20')); //true
-console.log(Number.isFinite(20 / 0)); //false
-console.log('-------');
-//Integer
-console.log(Number.isInteger(20)); //true
-console.log(Number.isInteger('20')); //false
-console.log(Number.isInteger('20px')); //false
-console.log(Number.isInteger(+'20px')); //false
-console.log(Number.isInteger(+'20')); //true
-console.log(Number.isInteger(20 / 0)); //false
+// //another parameter that it take is redix which is base of the number that we are dealing with like base 10 or 2 binary
+// console.log(Number.parseInt('30px', 10));
+// //here in this prefer the number first than something else
+// //it gives NaN
+// console.log(Number.parseInt('e30', 10));
+// //float Number
+// //the parse only take first number fo string
+// console.log(Number.parseFloat('2.5rem', 10));
+// //Infinity also exist in javascript
+// //isNaN checks if the given string or number is NaN or not if not then it give false
+// //literaly NaN
+// console.log('-------');
+// console.log(Number.isNaN('20')); //false
+// console.log(Number.isNaN(20)); //false
+// console.log(Number.isNaN(+'20')); //false
+// console.log(Number.isNaN(+'20px')); //true
+// console.log('-------');
+// //best way of checking vlaue is a number is isFinite()
+// console.log(Number.isFinite(20)); //true
+// console.log(Number.isFinite('20')); //false
+// console.log(Number.isFinite('20px')); //false
+// console.log(Number.isFinite(+'20px')); //false
+// console.log(Number.isFinite(+'20')); //true
+// console.log(Number.isFinite(20 / 0)); //false
+// console.log('-------');
+// //Integer
+// console.log(Number.isInteger(20)); //true
+// console.log(Number.isInteger('20')); //false
+// console.log(Number.isInteger('20px')); //false
+// console.log(Number.isInteger(+'20px')); //false
+// console.log(Number.isInteger(+'20')); //true
+// console.log(Number.isInteger(20 / 0)); //false
+
+// //Math
+
+// console.log(Math.sqrt(25));
+// //same as above sqaure root of 2
+// console.log(25 ** (1 / 2));
+// console.log(8 ** (1 / 3));
+
+// //Max
+// console.log(Math.max(1, 2, 3, 4, 5, 6, 7));
+// console.log(Math.max(1, 2, 3, 4, '23', 6, 7)); //23
+// console.log(Math.max(1, 2, 3, '23px', 5, 6, 7)); //NaN
+
+// //Min
+// console.log(Math.min(1, 2, 3, '23', 5, 6, 7));
+
+// //random()
+// //it give random number between 0 and 1
+// //if we dont add 1 in this while multiply by six it give between 0 and 5
+// //also to trunc all the other
+// //Math trunc cut the decimal part
+// // range >=0 and <6
+// console.log(Math.trunc(Math.random() * 6)) + 1;
+
+// const randomInt = (min, max) =>
+//   Math.floor(Math.random() * (max - min) + 1) + min;
+
+// console.log(randomInt(10, 20), 'random');
+
+// //Rounding Integers
+
+// console.log(Math.trunc(23.4)); //23
+// console.log(Math.round(25.5)); //26
+// //n negative situation we should use floor
+// console.log(Math.floor(-23.3)); //24
+// console.log(Math.trunc(-23.3)); //23
+
+// //Rounding decimal Number
+
+// //toFixed returns always string
+// //the parameter it takes will only return that number of decimal part
+// console.log((2.7).toFixed(0)); //2 in string
+// console.log((2.4).toFixed(3)); // 2.400 string
+// console.log(+(2.356).toFixed(2)); //2.36 number above it round it
+
+//Remainder Operator
+// console.log(5 % 2); // 2*2+1 so remainder is 1
+
+// const isEven = n => n % 2 === 0;
+
+// console.log(isEven(8));
+// console.log(isEven(9));
+// console.log(isEven(14));
+
+// //this here give the complete node list document.querySelectorAll('.movements__row')
+// //Now converting it to an array
+// //and using spread operator to stor it into new aray shallow caopy
+// //now we can do something about by looping over it
+// labelBalance.addEventListener('click', function () {
+//   [...document.querySelectorAll('.movements__row')].forEach(function (row, i) {
+//     if (i % 2 === 0) {
+//       row.style.backgroundColor = 'orangered';
+//     }
+//     if (i % 2 !== 0) {
+//       row.style.backgroundColor = 'yellow';
+//     }
+//   });
+// });
+
+//Numeric seperator
+//it helps to read the numeric number easily
+//e.g 2870000000 very to tell if it is 28 billion or what
+//so numeric seperator adds , in the number 287,000,000
+//like this
+// console.log(287, 908, 876);
+// //javascript engine ignore the . _ - in the numbers
+// //also javascript will not parse the nUmber correctly if we pass _ in the string
+// console.log(Number('23_33')); //this get me NaN
+// console.log(parseInt('23_33')); //it will only get 23
+
+//BingInt
+//BigInt constructor
+//you cannot mix bigint with the reqular number
+//n at the end of the bifg integer number you will get eact number
