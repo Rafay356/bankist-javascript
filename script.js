@@ -196,15 +196,42 @@ const updateUI = function (acc) {
   // Display summary
   calcDisplaySummary(acc);
 };
+//in below setTimeout there is bug tht the function does nit call immediatlt but it call after 1 second so that value we have before still show on UI
+//Te trick we use is to make seperate function and call in immedialty and then use it inside the setTimeout this way it calls first then start calling after 1 seconf
+const startLogoutTime = function () {
+  const tick = () => {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+    //display it in UI
+    labelTimer.textContent = `${min}:${sec}`;
+
+    //when time hits 0 logout and clear the time
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = `Log in to get started`;
+      containerApp.style.opacity = 0;
+    }
+    //decrease time every second
+    time = time - 1;
+  };
+
+  //set time
+  let time = 120;
+  //call function imediatly
+  tick();
+  //call the timer evry second
+  const timer = setInterval(tick, 1000);
+  return timer;
+};
 
 ///////////////////////////////////////
 // Event handlers
-let currentAccount;
+let currentAccount, timer; //it for presistisng data that why we are making it global
 
 //FAKE always LOGGED in
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 100;
 
 // Experimentin API Internalization
 // const now = new Date();
@@ -265,6 +292,11 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
+    //checks if timer left then clear the timer
+    if (timer) clearInterval(timer);
+    //Login Time starter
+    //this is  timer function as we returning it above in setTimeout
+    timer = startLogoutTime();
     // Update UI
     updateUI(currentAccount);
   }
@@ -292,6 +324,9 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.movementsDates.push(new Date().toISOString());
     receiverAcc.movementsDates.push(new Date().toISOString());
 
+    //reseting timer
+    if (timer) clearInterval(timer);
+    timer = startLogoutTime();
     // Update UI
     updateUI(currentAccount);
   }
@@ -303,14 +338,18 @@ btnLoan.addEventListener('click', function (e) {
   const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // Add movement
-    currentAccount.movements.push(amount);
+    setTimeout(() => {
+      // Add movement
+      currentAccount.movements.push(amount);
 
-    //Date
-    currentAccount.movementsDates.push(new Date().toISOString());
-
-    // Update UI
-    updateUI(currentAccount);
+      //Date
+      currentAccount.movementsDates.push(new Date().toISOString());
+      //reseting timer
+      if (timer) clearInterval(timer);
+      timer = startLogoutTime();
+      // Update UI
+      updateUI(currentAccount);
+    }, 2500);
   }
   inputLoanAmount.value = '';
 });
@@ -511,3 +550,29 @@ btnSort.addEventListener('click', function (e) {
 
 //Internationlization Dates Api
 // Intl.DateTimeFormat('en-PK').format()
+
+//Timer setTimeout and setInterval
+//setTimeout runs after a certain time
+//setInterval keeps on runnig until we stop it
+
+//we can seperate the ingritands or array or object
+// const ingredients = ['olives ', 'spinach'];
+// const pizzaTimer = setTimeout(
+//   (ing1, ing2) => console.log(`Here is your pizza with ${ing1} and ${ing2}`),
+//   3000,
+//   ...ingredients
+//   // 'olives ',
+//   // 'spinach'
+// );
+//also we can break the timeout
+// if (ingredients.includes('spinach')) clearTimeout(pizzaTimer);
+
+//setInterval
+//this is used to print the answer every given time and wont stop until we do so
+// setInterval(() => {
+//   const now = new Date();
+//   const hour = now.getHours();
+//   const minutes = now.getMinutes();
+//   const seconds = now.getSeconds();
+//   console.log(`${hour}:${minutes}:${seconds}`);
+// }, 1000);
