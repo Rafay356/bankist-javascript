@@ -445,6 +445,10 @@ btnSort.addEventListener('click', function (e) {
 // // range >=0 and <6
 // console.log(Math.trunc(Math.random() * 6)) + 1;
 
+//we are adding min init because we want to start the random number from given minimum number 
+//in this case it is 10 
+//so random number start from 10 and ends with 20 
+//i t between 10 and 20
 // const randomInt = (min, max) =>
 //   Math.floor(Math.random() * (max - min) + 1) + min;
 
