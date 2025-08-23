@@ -366,6 +366,9 @@ btnClose.addEventListener('click', function (e) {
     );
     console.log(index);
     // .indexOf(23)
+    //string.indexOf(searchValue, fromIndex)
+    //searchValue → what you’re looking for
+    //fromIndex (optional) → where to start searching (default 0)
 
     // Delete account
     accounts.splice(index, 1);
